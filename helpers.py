@@ -1,6 +1,6 @@
 import functools
 import warnings
-from wikibaseintegrator import wbi_core
+from wikibaseintegrator import wbi_core, wbi_login
 from wikibaseintegrator.wbi_config import config as wbi_config
 from contants import (
     MEDIAWIKI_API_URL,
@@ -19,12 +19,14 @@ from contants import (
     LABELS,
     QUALIFIERS,
     DESCRIPTIONS,
+    APPEND,
     ID_PROPERTY,
     LATITUDE_PROPERTY,
     LONGITUDE_PROPERTY,
     REFERENCED_STOP_PROPERTY,
     DATASET_PROPERTY,
     SOURCE_PROPERTY,
+    INSTANCE_OF_PROPERTY,
     ID_KEY,
     NAME_KEY,
     DESCRIPTION_KEY,
@@ -52,6 +54,124 @@ def configure(func):
 
 def suppress_wbi_core_props_warning():
     return warnings.filterwarnings("ignore", category=UserWarning)
+
+
+@configure
+def add_stop(
+    catalog_id,
+    instance_of,
+    mdb_id,
+    name,
+    description,
+    latitude,
+    longitude,
+    ref_stop_id,
+    ref_dataset_id,
+    ref_source_id,
+    username,
+    password,
+):
+    stop_data = []
+
+    # Instance Of property
+    stop_data.append(
+        wbi_core.ItemID(
+            value=instance_of,
+            prop_nr=INSTANCE_OF_PROPERTY,
+        )
+    )
+
+    # Latitude property
+    if latitude is not None:
+        stop_data.append(
+            wbi_core.String(
+                value=str(latitude),
+                prop_nr=LATITUDE_PROPERTY,
+            )
+        )
+
+    # Longitude property
+    if longitude is not None:
+        stop_data.append(
+            wbi_core.String(
+                value=str(longitude),
+                prop_nr=LONGITUDE_PROPERTY,
+            )
+        )
+
+    # ID property
+    if mdb_id is not None:
+        stop_data.append(
+            wbi_core.String(
+                value=mdb_id,
+                prop_nr=ID_PROPERTY,
+            )
+        )
+
+    # Referenced stop qualifiers
+    ref_qualifiers = []
+    if ref_dataset_id:
+        ref_qualifiers.append(
+            wbi_core.ItemID(
+                value=ref_dataset_id,
+                prop_nr=DATASET_PROPERTY,
+                is_qualifier=True,
+            )
+        )
+
+    if ref_source_id:
+        ref_qualifiers.append(
+            wbi_core.ItemID(
+                value=ref_source_id,
+                prop_nr=SOURCE_PROPERTY,
+                is_qualifier=True,
+            )
+        )
+
+    # Referenced stop property
+    if ref_stop_id:
+        stop_data.append(
+            wbi_core.String(
+                value=ref_stop_id,
+                prop_nr=REFERENCED_STOP_PROPERTY,
+                qualifiers=ref_qualifiers,
+            )
+        )
+
+    # Create the stop entity using the provided data
+    stop_entity = wbi_core.ItemEngine(
+        data=stop_data,
+    )
+
+    # Add the name and description
+    if name:
+        stop_entity.set_label(name, EN)
+    if description:
+        stop_entity.set_description(description, EN)
+
+    if not username:
+        raise ValueError("The username must be provided.")
+    if not password:
+        raise ValueError("The password must be provided.")
+    login_instance = wbi_login.Login(user=username, pwd=password, use_clientlogin=True)
+
+    # Create the stop entity on the database
+    stop_entity_id = stop_entity.write(login_instance)
+
+    # Create the stop property with the stop entity id and property
+    stop_prop = wbi_core.ItemID(
+        value=stop_entity_id,
+        prop_nr=STOP_PROPERTY,
+        if_exists=APPEND,
+    )
+    catalog_data = [stop_prop]
+
+    # Update the catalog
+    catalog_entity = wbi_core.ItemEngine(item_id=catalog_id)
+    catalog_entity.update(catalog_data)
+    catalog_entity_id = catalog_entity.write(login_instance)
+
+    return stop_entity_id, catalog_entity_id
 
 
 @configure
@@ -124,3 +244,18 @@ def parse_stop(stop_json):
             stop[REFERENCED_STOPS_KEY] = referenced_stops
 
     return stop
+
+
+def generate_id(prefix, latitude, longitude):
+    latitude_str = format_coordinate(latitude)
+    latitude_direction = "N" if latitude >= 0 else "S"
+    longitude_str = format_coordinate(longitude)
+    longitude_direction = "E" if latitude >= 0 else "W"
+    return f"{prefix}_{latitude_str}_{latitude_direction}_{longitude_str}_{longitude_direction}"
+
+
+def format_coordinate(coordinate):
+    coordinate_str = format(coordinate, ".6f")
+    coordinate_str = coordinate_str.replace(".", "_")
+    coordinate_str = coordinate_str.replace("-", "")
+    return coordinate_str

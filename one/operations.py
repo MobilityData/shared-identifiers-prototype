@@ -1,26 +1,51 @@
 import helpers
 from contants import (
     CATALOG_OF_MDB_STOPS_ID,
+    MDB_STOP_ITEM_ID,
     REFERENCED_STOPS_KEY,
     STOP_ID_KEY,
     DATASET_ID_KEY,
     SOURCE_ID_KEY,
     LATITUDE_KEY,
     LONGITUDE_KEY,
+    MDB_STOP_ID_PREFIX,
 )
 
 
-def add():
+def add(
+    name,
+    description,
+    latitude,
+    longitude,
+    ref_stop_id,
+    ref_dataset_id,
+    ref_source_id,
+    username,
+    password,
+):
     """Create a new MDB Stop and attach its first referenced stop."""
-    raise NotImplemented
+    return helpers.add_stop(
+        catalog_id=CATALOG_OF_MDB_STOPS_ID,
+        instance_of=MDB_STOP_ITEM_ID,
+        mdb_id=helpers.generate_id(MDB_STOP_ID_PREFIX, latitude, longitude),
+        name=name,
+        description=description,
+        latitude=latitude,
+        longitude=longitude,
+        ref_stop_id=ref_stop_id,
+        ref_dataset_id=ref_dataset_id,
+        ref_source_id=ref_source_id,
+        username=username,
+        password=password,
+    )
 
 
-def attach():
+def attach(ref_stop_id, ref_dataset_id, ref_source_id, user, password):
     """Attach a new referenced stop to a MDB Stop."""
     raise NotImplemented
 
 
-def detach():
+def detach(ref_stop_id, ref_dataset_id, ref_source_id, user, password):
     """Detach a referenced stop from a MDB Stop.
     If the MDB Stop has no more referenced stop attached to it, it is deleted."""
     raise NotImplemented
