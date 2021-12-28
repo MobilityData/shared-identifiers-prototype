@@ -60,7 +60,7 @@ def suppress_wbi_core_props_warning():
 def add_stop(
     catalog_id,
     instance_of,
-    mdb_id,
+    mdb_stop_id,
     name,
     description,
     latitude,
@@ -100,10 +100,10 @@ def add_stop(
         )
 
     # ID property
-    if mdb_id is not None:
+    if mdb_stop_id is not None:
         stop_data.append(
             wbi_core.String(
-                value=mdb_id,
+                value=mdb_stop_id,
                 prop_nr=ID_PROPERTY,
             )
         )
@@ -172,6 +172,55 @@ def add_stop(
     catalog_entity_id = catalog_entity.write(login_instance)
 
     return stop_entity_id, catalog_entity_id
+
+
+@configure
+def attach(mdb_stop_id, ref_stop_id, ref_dataset_id, ref_source_id, username, password):
+    # Referenced stop qualifiers
+    ref_qualifiers = []
+    if not ref_dataset_id:
+        raise ValueError("The Referenced dataset id must be provided.")
+    ref_qualifiers.append(
+        wbi_core.ItemID(
+            value=ref_dataset_id,
+            prop_nr=DATASET_PROPERTY,
+            is_qualifier=True,
+        )
+    )
+
+    if not ref_source_id:
+        raise ValueError("The Referenced source id must be provided.")
+    ref_qualifiers.append(
+        wbi_core.ItemID(
+            value=ref_source_id,
+            prop_nr=SOURCE_PROPERTY,
+            is_qualifier=True,
+        )
+    )
+
+    # Create the Referenced stop property with the ref stop entity id and ref qualifiers
+    if not ref_stop_id:
+        raise ValueError("The Referenced stop id must be provided.")
+    ref_stop_prop = wbi_core.String(
+        value=ref_stop_id,
+        prop_nr=REFERENCED_STOP_PROPERTY,
+        qualifiers=ref_qualifiers,
+        if_exists=APPEND,
+    )
+    stop_data = [ref_stop_prop]
+
+    if not username:
+        raise ValueError("The username must be provided.")
+    if not password:
+        raise ValueError("The password must be provided.")
+    login_instance = wbi_login.Login(user=username, pwd=password, use_clientlogin=True)
+
+    # Attach the referenced stop to the mdb stop
+    stop_entity = wbi_core.ItemEngine(item_id=mdb_stop_id)
+    stop_entity.update(stop_data)
+    stop_entity_id = stop_entity.write(login_instance)
+
+    return stop_entity_id
 
 
 @configure
