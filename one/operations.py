@@ -40,10 +40,12 @@ def add(
     )
 
 
-def attach(mdb_stop_id, ref_stop_id, ref_dataset_id, ref_source_id, username, password):
+def attach(
+    mdb_stop_item_id, ref_stop_id, ref_dataset_id, ref_source_id, username, password
+):
     """Attach a new referenced stop to a MDB Stop."""
     return helpers.attach(
-        mdb_stop_id=mdb_stop_id,
+        mdb_stop_item_id=mdb_stop_item_id,
         ref_stop_id=ref_stop_id,
         ref_dataset_id=ref_dataset_id,
         ref_source_id=ref_source_id,

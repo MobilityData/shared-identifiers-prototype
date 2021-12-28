@@ -27,6 +27,7 @@ from contants import (
     DATASET_PROPERTY,
     SOURCE_PROPERTY,
     INSTANCE_OF_PROPERTY,
+    ITEM_ID_KEY,
     ID_KEY,
     NAME_KEY,
     DESCRIPTION_KEY,
@@ -175,7 +176,9 @@ def add_stop(
 
 
 @configure
-def attach(mdb_stop_id, ref_stop_id, ref_dataset_id, ref_source_id, username, password):
+def attach(
+    mdb_stop_item_id, ref_stop_id, ref_dataset_id, ref_source_id, username, password
+):
     # Referenced stop qualifiers
     ref_qualifiers = []
     if not ref_dataset_id:
@@ -216,7 +219,7 @@ def attach(mdb_stop_id, ref_stop_id, ref_dataset_id, ref_source_id, username, pa
     login_instance = wbi_login.Login(user=username, pwd=password, use_clientlogin=True)
 
     # Attach the referenced stop to the mdb stop
-    stop_entity = wbi_core.ItemEngine(item_id=mdb_stop_id)
+    stop_entity = wbi_core.ItemEngine(item_id=mdb_stop_item_id)
     stop_entity.update(stop_data)
     stop_entity_id = stop_entity.write(login_instance)
 
@@ -236,13 +239,13 @@ def get_stops(catalog_id):
         for stop_id in stop_ids:
             stop_item = wbi_core.ItemEngine(item_id=stop_id)
             stop_json = stop_item.get_json_representation()
-            stop = parse_stop(stop_json)
+            stop = parse_stop(stop_json, stop_item.item_id)
             stops.append(stop)
     return stops
 
 
-def parse_stop(stop_json):
-    stop = {}
+def parse_stop(stop_json, stop_item_id):
+    stop = {ITEM_ID_KEY: stop_item_id}
 
     stop_mdb_id_values = stop_json.get(CLAIMS, {}).get(ID_PROPERTY, [])
     if stop_mdb_id_values:

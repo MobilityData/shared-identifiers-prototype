@@ -28,7 +28,8 @@ DESCRIPTIONS = "descriptions"
 APPEND = "APPEND"
 
 # STOP KEYS
-ID_KEY = "id"
+ITEM_ID_KEY = "item_id"  # Refers to the Wikibase item ID
+ID_KEY = "id"  # Refers to the MDB ID
 NAME_KEY = "name"
 DESCRIPTION_KEY = "description"
 LATITUDE_KEY = "latitude"

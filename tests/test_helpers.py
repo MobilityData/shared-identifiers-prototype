@@ -25,10 +25,13 @@ class GetStopsTestCase(unittest.TestCase):
 
 
 class ParseStopTestCase(unittest.TestCase):
+    def setUp(self):
+        self.test_item_id = "Q22309"
+
     def test_parse_empty_stop(self):
         stop_json = {}
-        under_test = parse_stop(stop_json)
-        self.assertEqual(under_test, {})
+        under_test = parse_stop(stop_json, self.test_item_id)
+        self.assertEqual(under_test, {"item_id": "Q22309"})
 
     def test_parse_partial_stop(self):
         stop_json = {
@@ -50,8 +53,9 @@ class ParseStopTestCase(unittest.TestCase):
                 "P65": [{"mainsnak": {"datavalue": {"value": {"id": "Q22308"}}}}],
             },
         }
-        under_test = parse_stop(stop_json)
+        under_test = parse_stop(stop_json, self.test_item_id)
         test_stop = {
+            "item_id": "Q22309",
             "id": "mdb_stop_45_5017_N_73_5673_W",
             "name": "MDB Stop Example",
             "description": "This is the MDB Stop representing the XYZ shared stop",
@@ -102,8 +106,9 @@ class ParseStopTestCase(unittest.TestCase):
                 "P65": [{"mainsnak": {"datavalue": {"value": {"id": "Q22308"}}}}],
             },
         }
-        under_test = parse_stop(stop_json)
+        under_test = parse_stop(stop_json, self.test_item_id)
         test_stop = {
+            "item_id": "Q22309",
             "id": "mdb_stop_45_5017_N_73_5673_W",
             "name": "MDB Stop Example",
             "description": "This is the MDB Stop representing the XYZ shared stop",
@@ -168,8 +173,9 @@ class ParseStopTestCase(unittest.TestCase):
             "some_field": "some_value",
             "another_field": "some_other_value",
         }
-        under_test = parse_stop(stop_json)
+        under_test = parse_stop(stop_json, self.test_item_id)
         test_stop = {
+            "item_id": "Q22309",
             "id": "mdb_stop_45_5017_N_73_5673_W",
             "name": "MDB Stop Example",
             "description": "This is the MDB Stop representing the XYZ shared stop",
