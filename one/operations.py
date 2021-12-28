@@ -36,10 +36,8 @@ def get_stops_by_bounding_box(max_latitude, min_latitude, max_longitude, min_lon
     return [
         stop
         for stop in helpers.get_stops(CATALOG_OF_MDB_STOPS_ID)
-        if stop[LATITUDE_KEY] <= max_latitude
-        and stop[LATITUDE_KEY] >= min_latitude
-        and stop[LONGITUDE_KEY] <= max_longitude
-        and stop[LONGITUDE_KEY] >= min_longitude
+        if max_latitude >= stop[LATITUDE_KEY] >= min_latitude
+        and max_longitude >= stop[LONGITUDE_KEY] >= min_longitude
     ]
 
 
