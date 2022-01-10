@@ -20,6 +20,13 @@ def add_stop(
 ):
     """Create a new MDB Stop and attach its first referenced stop."""
     stops = helpers.load_stops()
+    # Don't add twice a mdb stop with exactly the same coordinates
+    if not stops[(stops[LATITUDE] == latitude) & (stops[LONGITUDE] == longitude)].empty:
+        raise ValueError(
+            "A MDB Stop already exist with exactly the same coordinates "
+            "as the given `latitude` and `longitude`. Impossible to add the stop."
+        )
+    # Add new stop
     new_stop = pd.DataFrame(
         [
             [
@@ -47,11 +54,22 @@ def add_stop(
 def attach_ref_stop(mdb_stop_id, ref_stop_id, ref_dataset_id, ref_source_id):
     """Attach a new referenced stop to a MDB Stop."""
     stops = helpers.load_stops()
-    referenced_stops = stops.loc[stops.ID == mdb_stop_id, REFERENCED_STOPS]
+    # Attach referenced stop if the given MDB Stop ID exist and is not duplicated
+    mdb_stop_index_series = stops[stops[ID] == mdb_stop_id].index
+    if mdb_stop_index_series.size < 1:
+        raise ValueError(
+            "The given `mdb_stop_id` does not exist. Impossible to attach a referenced stop."
+        )
+    elif mdb_stop_index_series.size > 1:
+        raise ValueError(
+            "Several MDB Stop share the same `mdb_stop_id`. Please contact the administrator."
+        )
+    mdb_stop_index = mdb_stop_index_series[0]
+    referenced_stops = ast.literal_eval(stops.at[mdb_stop_index, REFERENCED_STOPS])
     referenced_stops.append(
         {STOP_ID: ref_stop_id, DATASET_ID: ref_dataset_id, SOURCE_ID: ref_source_id}
     )
-    stops.loc[stops.ID == mdb_stop_id, REFERENCED_STOPS] = referenced_stops
+    stops.at[mdb_stop_index, REFERENCED_STOPS] = referenced_stops
     helpers.save_stops(stops)
     return stops
 

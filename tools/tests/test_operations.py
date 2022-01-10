@@ -20,7 +20,7 @@ class TestStopsOperations(TestCase):
         under_test = get_stops()
         mock_helpers.load_stops.assert_called_once()
         self.assertEqual(under_test.columns.tolist(), self.columns)
-        self.assertEqual(len(under_test.index), 2)
+        self.assertEqual(under_test.index.size, 2)
 
     @patch("tools.operations.helpers")
     def test_get_stops_by_bounding_box(self, mock_helpers):
@@ -38,7 +38,7 @@ class TestStopsOperations(TestCase):
         )
         mock_helpers.load_stops.assert_called_once()
         self.assertEqual(under_test.columns.tolist(), self.columns)
-        self.assertEqual(len(under_test.index), 2)
+        self.assertEqual(under_test.index.size, 2)
 
         max_latitude = 34.040000
         min_latitude = 34.000000
@@ -48,7 +48,7 @@ class TestStopsOperations(TestCase):
         under_test = get_stops_by_bounding_box(
             max_latitude, min_latitude, max_longitude, min_longitude
         )
-        self.assertEqual(len(under_test.index), 1)
+        self.assertEqual(under_test.index.size, 1)
 
         max_latitude = 34.010000
         min_latitude = 34.000000
@@ -58,7 +58,7 @@ class TestStopsOperations(TestCase):
         under_test = get_stops_by_bounding_box(
             max_latitude, min_latitude, max_longitude, min_longitude
         )
-        self.assertEqual(len(under_test.index), 0)
+        self.assertEqual(under_test.index.size, 0)
 
     @patch("tools.operations.helpers")
     def test_get_stops_by_source_id(self, mock_helpers):
@@ -71,17 +71,17 @@ class TestStopsOperations(TestCase):
         under_test = get_stops_by_source_id(source_id)
         mock_helpers.load_stops.assert_called_once()
         self.assertEqual(under_test.columns.tolist(), self.columns)
-        self.assertEqual(len(under_test.index), 1)
+        self.assertEqual(under_test.index.size, 1)
 
         source_id = "source_2"
 
         under_test = get_stops_by_source_id(source_id)
-        self.assertEqual(len(under_test.index), 1)
+        self.assertEqual(under_test.index.size, 1)
 
         source_id = "source_3"
 
         under_test = get_stops_by_source_id(source_id)
-        self.assertEqual(len(under_test.index), 0)
+        self.assertEqual(under_test.index.size, 0)
 
     @patch("tools.operations.helpers")
     def test_get_stops_by_dataset_id(self, mock_helpers):
@@ -94,17 +94,17 @@ class TestStopsOperations(TestCase):
         under_test = get_stops_by_dataset_id(dataset_id)
         mock_helpers.load_stops.assert_called_once()
         self.assertEqual(under_test.columns.tolist(), self.columns)
-        self.assertEqual(len(under_test.index), 1)
+        self.assertEqual(under_test.index.size, 1)
 
         dataset_id = "dataset_2"
 
         under_test = get_stops_by_dataset_id(dataset_id)
-        self.assertEqual(len(under_test.index), 1)
+        self.assertEqual(under_test.index.size, 1)
 
         dataset_id = "dataset_3"
 
         under_test = get_stops_by_dataset_id(dataset_id)
-        self.assertEqual(len(under_test.index), 0)
+        self.assertEqual(under_test.index.size, 0)
 
     @patch("tools.operations.helpers")
     def test_get_stops_by_stop_id(self, mock_helpers):
@@ -117,32 +117,47 @@ class TestStopsOperations(TestCase):
         under_test = get_stops_by_stop_id(stop_id)
         mock_helpers.load_stops.assert_called_once()
         self.assertEqual(under_test.columns.tolist(), self.columns)
-        self.assertEqual(len(under_test.index), 1)
+        self.assertEqual(under_test.index.size, 1)
 
         stop_id = "stop_2"
 
         under_test = get_stops_by_stop_id(stop_id)
-        self.assertEqual(len(under_test.index), 1)
+        self.assertEqual(under_test.index.size, 1)
 
         stop_id = "stop_3"
 
         under_test = get_stops_by_stop_id(stop_id)
-        self.assertEqual(len(under_test.index), 0)
+        self.assertEqual(under_test.index.size, 0)
 
     @patch("tools.operations.helpers")
-    def test_add_stop_operation(self, mock_helpers):
+    def test_add_stop(self, mock_helpers):
         mock_helpers.load_stops.return_value = pd.read_csv(
             self.test_stops_csv, delimiter=";", index_col=self.test_index
         )
 
-        test_new_stop_index = 2
         test_name = "test_name"
         test_description = "test_description"
-        test_latitude = 34.000000
-        test_longitude = -118.000000
+        test_latitude = 34.029323
+        test_longitude = -118.404255
         test_ref_stop_id = "test_stop_id"
         test_ref_dataset_id = "test_dataset_id"
         test_ref_source_id = "test_source_id"
+
+        self.assertRaises(
+            ValueError,
+            add_stop,
+            name=test_name,
+            description=test_description,
+            latitude=test_latitude,
+            longitude=test_longitude,
+            ref_stop_id=test_ref_stop_id,
+            ref_dataset_id=test_ref_dataset_id,
+            ref_source_id=test_ref_source_id,
+        )
+
+        test_latitude = 34.000000
+        test_longitude = -118.000000
+        test_new_stop_index = 2
 
         under_test = add_stop(
             name=test_name,
@@ -153,7 +168,7 @@ class TestStopsOperations(TestCase):
             ref_dataset_id=test_ref_dataset_id,
             ref_source_id=test_ref_source_id,
         )
-        self.assertEqual(len(under_test.index), 3)
+        self.assertEqual(under_test.index.size, 3)
         self.assertEqual(under_test.at[test_new_stop_index, NAME], test_name)
         self.assertEqual(
             under_test.at[test_new_stop_index, DESCRIPTION], test_description
@@ -169,5 +184,57 @@ class TestStopsOperations(TestCase):
                     SOURCE_ID: test_ref_source_id,
                 }
             ],
+        )
+        mock_helpers.save_stops.assert_called_with(under_test)
+
+    @patch("tools.operations.helpers")
+    def test_attach_ref_stop(self, mock_helpers):
+        mock_helpers.load_stops.return_value = pd.read_csv(
+            self.test_stops_csv, delimiter=";", index_col=self.test_index
+        )
+
+        test_mdb_stop_id = "nonexistent_mdb_stop_id"
+        test_ref_stop_id = "test_stop_id"
+        test_ref_dataset_id = "test_dataset_id"
+        test_ref_source_id = "test_source_id"
+
+        self.assertRaises(
+            ValueError,
+            attach_ref_stop,
+            mdb_stop_id=test_mdb_stop_id,
+            ref_stop_id=test_ref_stop_id,
+            ref_dataset_id=test_ref_dataset_id,
+            ref_source_id=test_ref_source_id,
+        )
+
+        test_mdb_stop_id = "mdb_stop_34_029323_N_118_404255_E"
+        test_stop_index = 0
+        test_name = "Palms Station"
+        test_description = "Palms Station"
+        test_latitude = 34.029323
+        test_longitude = -118.404255
+        test_referenced_stops = [
+            {STOP_ID: "stop_1", DATASET_ID: "dataset_1", SOURCE_ID: "source_1"},
+            {
+                STOP_ID: test_ref_stop_id,
+                DATASET_ID: test_ref_dataset_id,
+                SOURCE_ID: test_ref_source_id,
+            },
+        ]
+
+        under_test = attach_ref_stop(
+            mdb_stop_id=test_mdb_stop_id,
+            ref_stop_id=test_ref_stop_id,
+            ref_dataset_id=test_ref_dataset_id,
+            ref_source_id=test_ref_source_id,
+        )
+        self.assertEqual(under_test.index.size, 2)
+        self.assertEqual(under_test.at[test_stop_index, NAME], test_name)
+        self.assertEqual(under_test.at[test_stop_index, DESCRIPTION], test_description)
+        self.assertEqual(under_test.at[test_stop_index, LATITUDE], test_latitude)
+        self.assertEqual(under_test.at[test_stop_index, LONGITUDE], test_longitude)
+        self.assertEqual(
+            under_test.at[test_stop_index, REFERENCED_STOPS],
+            test_referenced_stops,
         )
         mock_helpers.save_stops.assert_called_with(under_test)
