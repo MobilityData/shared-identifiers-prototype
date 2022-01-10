@@ -128,3 +128,46 @@ class TestStopsOperations(TestCase):
 
         under_test = get_stops_by_stop_id(stop_id)
         self.assertEqual(len(under_test.index), 0)
+
+    @patch("tools.operations.helpers")
+    def test_add_stop_operation(self, mock_helpers):
+        mock_helpers.load_stops.return_value = pd.read_csv(
+            self.test_stops_csv, delimiter=";", index_col=self.test_index
+        )
+
+        test_new_stop_index = 2
+        test_name = "test_name"
+        test_description = "test_description"
+        test_latitude = 34.000000
+        test_longitude = -118.000000
+        test_ref_stop_id = "test_stop_id"
+        test_ref_dataset_id = "test_dataset_id"
+        test_ref_source_id = "test_source_id"
+
+        under_test = add_stop(
+            name=test_name,
+            description=test_description,
+            latitude=test_latitude,
+            longitude=test_longitude,
+            ref_stop_id=test_ref_stop_id,
+            ref_dataset_id=test_ref_dataset_id,
+            ref_source_id=test_ref_source_id,
+        )
+        self.assertEqual(len(under_test.index), 3)
+        self.assertEqual(under_test.at[test_new_stop_index, NAME], test_name)
+        self.assertEqual(
+            under_test.at[test_new_stop_index, DESCRIPTION], test_description
+        )
+        self.assertEqual(under_test.at[test_new_stop_index, LATITUDE], test_latitude)
+        self.assertEqual(under_test.at[test_new_stop_index, LONGITUDE], test_longitude)
+        self.assertEqual(
+            under_test.at[test_new_stop_index, REFERENCED_STOPS],
+            [
+                {
+                    STOP_ID: test_ref_stop_id,
+                    DATASET_ID: test_ref_dataset_id,
+                    SOURCE_ID: test_ref_source_id,
+                }
+            ],
+        )
+        mock_helpers.save_stops.assert_called_with(under_test)
