@@ -238,3 +238,52 @@ class TestStopsOperations(TestCase):
             test_referenced_stops,
         )
         mock_helpers.save_stops.assert_called_with(under_test)
+
+    @patch("tools.operations.helpers")
+    def test_detach_ref_stop(self, mock_helpers):
+        mock_helpers.load_stops.return_value = pd.read_csv(
+            self.test_stops_csv, delimiter=";", index_col=self.test_index
+        )
+
+        test_mdb_stop_id = "nonexistent_mdb_stop_id"
+        test_ref_stop_id = "test_stop_id"
+        test_ref_dataset_id = "test_dataset_id"
+        test_ref_source_id = "test_source_id"
+
+        self.assertRaises(
+            ValueError,
+            attach_ref_stop,
+            mdb_stop_id=test_mdb_stop_id,
+            ref_stop_id=test_ref_stop_id,
+            ref_dataset_id=test_ref_dataset_id,
+            ref_source_id=test_ref_source_id,
+        )
+
+        test_mdb_stop_id = "mdb_stop_34_029323_N_118_404255_E"
+        test_ref_stop_id = "stop_1"
+        test_ref_dataset_id = "dataset_1"
+        test_ref_source_id = "source_1"
+
+        test_stop_index = 0
+        test_name = "Palms Station"
+        test_description = "Palms Station"
+        test_latitude = 34.029323
+        test_longitude = -118.404255
+        test_referenced_stops = []
+
+        under_test = detach_ref_stop(
+            mdb_stop_id=test_mdb_stop_id,
+            ref_stop_id=test_ref_stop_id,
+            ref_dataset_id=test_ref_dataset_id,
+            ref_source_id=test_ref_source_id,
+        )
+        self.assertEqual(under_test.index.size, 2)
+        self.assertEqual(under_test.at[test_stop_index, NAME], test_name)
+        self.assertEqual(under_test.at[test_stop_index, DESCRIPTION], test_description)
+        self.assertEqual(under_test.at[test_stop_index, LATITUDE], test_latitude)
+        self.assertEqual(under_test.at[test_stop_index, LONGITUDE], test_longitude)
+        self.assertEqual(
+            under_test.at[test_stop_index, REFERENCED_STOPS],
+            test_referenced_stops,
+        )
+        mock_helpers.save_stops.assert_called_with(under_test)

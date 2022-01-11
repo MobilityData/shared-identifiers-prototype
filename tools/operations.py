@@ -75,9 +75,30 @@ def attach_ref_stop(mdb_stop_id, ref_stop_id, ref_dataset_id, ref_source_id):
 
 
 def detach_ref_stop(mdb_stop_id, ref_stop_id, ref_dataset_id, ref_source_id):
-    """Detach a referenced stop from a MDB Stop.
-    If the MDB Stop has no more referenced stop attached to it, it is deleted."""
-    raise NotImplemented
+    """Detach a referenced stop from a MDB Stop."""
+    stops = helpers.load_stops()
+    # Detach referenced stop if the given MDB Stop ID exist and is not duplicated
+    mdb_stop_index_series = stops[stops[ID] == mdb_stop_id].index
+    if mdb_stop_index_series.size < 1:
+        raise ValueError(
+            "The given `mdb_stop_id` does not exist. Impossible to detach a referenced stop."
+        )
+    elif mdb_stop_index_series.size > 1:
+        raise ValueError(
+            "Several MDB Stop share the same `mdb_stop_id`. Please contact the administrator."
+        )
+    mdb_stop_index = mdb_stop_index_series[0]
+    referenced_stops = ast.literal_eval(stops.at[mdb_stop_index, REFERENCED_STOPS])
+    referenced_stops = [
+        ref_stop
+        for ref_stop in referenced_stops
+        if ref_stop[STOP_ID] != ref_stop_id
+        and ref_stop[DATASET_ID] != ref_dataset_id
+        and ref_stop[SOURCE_ID] != ref_source_id
+    ]
+    stops.at[mdb_stop_index, REFERENCED_STOPS] = referenced_stops
+    helpers.save_stops(stops)
+    return stops
 
 
 def get_stops():
