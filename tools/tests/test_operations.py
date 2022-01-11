@@ -20,7 +20,7 @@ class TestStopsOperations(TestCase):
         under_test = get_stops()
         mock_helpers.load_stops.assert_called_once()
         self.assertEqual(under_test.columns.tolist(), self.columns)
-        self.assertEqual(under_test.index.size, 2)
+        self.assertEqual(under_test.index.size, 3)
 
     @patch("tools.operations.helpers")
     def test_get_stops_by_bounding_box(self, mock_helpers):
@@ -157,7 +157,7 @@ class TestStopsOperations(TestCase):
 
         test_latitude = 34.000000
         test_longitude = -118.000000
-        test_new_stop_index = 2
+        test_new_stop_index = 3
 
         under_test = add_stop(
             name=test_name,
@@ -168,7 +168,7 @@ class TestStopsOperations(TestCase):
             ref_dataset_id=test_ref_dataset_id,
             ref_source_id=test_ref_source_id,
         )
-        self.assertEqual(under_test.index.size, 3)
+        self.assertEqual(under_test.index.size, 4)
         self.assertEqual(under_test.at[test_new_stop_index, NAME], test_name)
         self.assertEqual(
             under_test.at[test_new_stop_index, DESCRIPTION], test_description
@@ -228,7 +228,7 @@ class TestStopsOperations(TestCase):
             ref_dataset_id=test_ref_dataset_id,
             ref_source_id=test_ref_source_id,
         )
-        self.assertEqual(under_test.index.size, 2)
+        self.assertEqual(under_test.index.size, 3)
         self.assertEqual(under_test.at[test_stop_index, NAME], test_name)
         self.assertEqual(under_test.at[test_stop_index, DESCRIPTION], test_description)
         self.assertEqual(under_test.at[test_stop_index, LATITUDE], test_latitude)
@@ -277,7 +277,7 @@ class TestStopsOperations(TestCase):
             ref_dataset_id=test_ref_dataset_id,
             ref_source_id=test_ref_source_id,
         )
-        self.assertEqual(under_test.index.size, 2)
+        self.assertEqual(under_test.index.size, 3)
         self.assertEqual(under_test.at[test_stop_index, NAME], test_name)
         self.assertEqual(under_test.at[test_stop_index, DESCRIPTION], test_description)
         self.assertEqual(under_test.at[test_stop_index, LATITUDE], test_latitude)

@@ -1,3 +1,4 @@
 index;id;name;description;latitude;longitude;referenced_stops
 0;mdb_stop_34_029323_N_118_404255_E;Palms Station;Palms Station;34.029323;-118.404255;[{'stop_id': 'stop_1', 'dataset_id': 'dataset_1', 'source_id': 'source_1'}]
 1;mdb_stop_34_061689_N_118_308756_E;Wilshire / Western Station;Wilshire / Western Station;34.061689;-118.308756;[{'stop_id': 'stop_2', 'dataset_id': 'dataset_2', 'source_id': 'source_2'}]
+2;mdb_stop_33_929621_N_118_377134_E;Aviation / LAX Station;Aviation / LAX Station;33.929621;-118.377134;[]

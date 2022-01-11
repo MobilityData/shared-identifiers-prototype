@@ -126,11 +126,7 @@ def get_stops_by_source_id(source_id):
         .apply(ast.literal_eval)
         .apply(
             lambda ref_stops: any(
-                [
-                    ref_stop
-                    for ref_stop in ref_stops
-                    if ref_stop.get(SOURCE_ID) == source_id
-                ]
+                [ref_stop for ref_stop in ref_stops if ref_stop[SOURCE_ID] == source_id]
             )
         )
     ]
@@ -148,7 +144,7 @@ def get_stops_by_dataset_id(dataset_id):
                 [
                     ref_stop
                     for ref_stop in ref_stops
-                    if ref_stop.get(DATASET_ID) == dataset_id
+                    if ref_stop[DATASET_ID] == dataset_id
                 ]
             )
         )
@@ -164,7 +160,7 @@ def get_stops_by_stop_id(stop_id):
         .apply(ast.literal_eval)
         .apply(
             lambda ref_stops: any(
-                [ref_stop for ref_stop in ref_stops if ref_stop.get(STOP_ID) == stop_id]
+                [ref_stop for ref_stop in ref_stops if ref_stop[STOP_ID] == stop_id]
             )
         )
     ]
