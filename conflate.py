@@ -30,6 +30,7 @@ from constants import (
     SOURCE_STOP_KEY,
     YES,
     NO,
+    EMPTY_STRING,
 )
 
 
@@ -131,6 +132,13 @@ if __name__ == "__main__":
         # According to the GTFS specification, blank location type is a Stop.
         dataset.stops[GTFS_LOCATION_TYPE] = dataset.stops[GTFS_LOCATION_TYPE].fillna(
             GTFS_LOCATION_TYPE_STOP
+        )
+        dataset.stops = dataset.stops
+
+        # Transform the null (NaN) descriptions to the empty string.
+        # According to the GTFS specification, a stop description is optional and can be null.
+        dataset.stops[GTFS_STOP_DESC] = dataset.stops[GTFS_STOP_DESC].fillna(
+            EMPTY_STRING
         )
         dataset.stops = dataset.stops
 
