@@ -9,7 +9,8 @@
 * [License](#License)
 
 ## General info
-This prototype leverage the CSV file approach.
+This repository contains the MDB Stops and the code to conflate Source Stops to them.
+This prototype leverage the CSV file approach for the first option described [here](https://github.com/MobilityData/mobility-database-interface/issues/338#issuecomment-999188292).
 
 ## Getting Started
 
@@ -25,6 +26,22 @@ To manually generate a test report for the project, enter the following commands
 $ (env) pytest --html=report.html
 ```
 
+### The Data
+
+The file `stops.csv` contains all our data representing the MDB Stops. The file is a UTF-8 encoded Comma Separated Value (CSV) using the semi-colon `;` as the field delimiter.
+
+#### Columns
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `index` | integer | Index of the MDB Stop in the CSV file. |
+| `id` | string | ID of the MDB Stop. Generated when a new MDB Stop is added using the latitude and longitude of the stop. |
+| `name` | string  | Name of the MDB Stop. It usually corresponds to the value `stop_name` in a GTFS `stops.txt` file. |
+| `description` | string | Description of the MDB Stop. It should describe the relationship that the MDB Stop represents, eg. The MBD Stop is a transfer stop in Santa Monica.|
+| `latitude` | float | Latitude of the MDB Stop as a float. |
+| `longitude` | float | Longitude of the MDB Stop as a float. |
+| `referenced_stops` | list of JSON | Stops referring to the MDB Stop. An item of the list is a JSON object following this format '{"stop_id": "some_stop_id", "dataset_id": "some_dataset_id", "source_id": "some_source_id"}'.|
+
 ### How to conflate?
 
 The script `conflate.py` allows you to conflate your stops to the MDB Stops following the first option steps, as described [here](https://github.com/MobilityData/mobility-database-interface/issues/338#issuecomment-999188292).
@@ -36,6 +53,8 @@ Enter the following command line to run the script:
 $ python conflate.py -d $URL_OR_PATH_TO_YOUR_DATASET -D $YOUR_MDB_DATASET_ID -S $YOUR_MDB_SOURCE_ID -m $GET_STOPS_MODE -p $GET_STOPS_PARAMETERS -t $DISTANCE_THRESHOLD_IN_KM
 ```
 
+#### Modes and parameters
+
 The mode and parameter arguments are dependent. Make sure the parameters you provide are correct for the selected mode.
 
 | Mode | Description | Argument | Parameters format |
@@ -45,7 +64,6 @@ The mode and parameter arguments are dependent. Make sure the parameters you pro
 | By Stop ID | Get the MDB Stops for which a referenced stop has the given Stop ID | 'stop_id' | '{"stop_id": string}' |
 | By Dataset ID | Get the MDB Stops for which a referenced stop has the given Dataset ID | 'dataset_id' | '{"dataset_id": string}' |
 | By Source ID | Get the MDB Stops for which a referenced stop has the given Source ID | 'source_id' | '{"source_id": string}' |
-
 
 ### Operations
 
