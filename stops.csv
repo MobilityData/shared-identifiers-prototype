@@ -35,7 +35,7 @@ index;id;name;description;latitude;longitude;referenced_stops
 33;mdb_stop_34_031705_N_118_452896_E;Expo / Bundy Station;Expo / Bundy Station;34.031705;-118.452896;[{'stop_id': '80136', 'dataset_id': 'Q22306', 'source_id': 'Q22305'}]
 34;mdb_stop_34_027995_N_118_469120_E;26th Street / Bergamot Station;26th Street / Bergamot Station;34.027995;-118.46912;[{'stop_id': '80137', 'dataset_id': 'Q22306', 'source_id': 'Q22305'}]
 35;mdb_stop_34_023155_N_118_480372_E;17th Street / SMC Station;17th Street / SMC Station;34.023155;-118.480372;[{'stop_id': '80138', 'dataset_id': 'Q22306', 'source_id': 'Q22305'}]
-36;mdb_stop_34_014010_N_118_491384_E;Downtown Santa Monica Station;Downtown Santa Monica Station;34.01401;-118.491384;[{'stop_id': '80139', 'dataset_id': 'Q22306', 'source_id': 'Q22305'}, {'stop_id': '224', 'dataset_id': 'Q22304', 'source_id': 'Q1856'}]
+36;mdb_stop_34_014010_N_118_491384_E;Downtown Santa Monica Station;Downtown Santa Monica Station;34.01401;-118.491384;[{'stop_id': '80139', 'dataset_id': 'Q22306', 'source_id': 'Q22305'}, {'stop_id': '21', 'dataset_id': 'Q22304', 'source_id': 'Q1856'}]
 37;mdb_stop_33_768740_N_118_189362_E;1st Street Station;1st Street Station;33.76874;-118.189362;[{'stop_id': '80153', 'dataset_id': 'Q22306', 'source_id': 'Q22305'}]
 38;mdb_stop_33_773598_N_118_189412_E;5th Street Station;5th Street Station;33.773598;-118.189412;[{'stop_id': '80154', 'dataset_id': 'Q22306', 'source_id': 'Q22305'}]
 39;mdb_stop_34_168504_N_118_376808_E;North Hollywood Station;North Hollywood Station;34.168504;-118.376808;[{'stop_id': '80201', 'dataset_id': 'Q22306', 'source_id': 'Q22305'}]
