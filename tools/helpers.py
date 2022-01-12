@@ -10,7 +10,7 @@ def load_stops():
 
 
 def save_stops(stops):
-    stops.to_csv(STOPS_CSV, index=True, index_label=INDEX)
+    stops.to_csv(STOPS_CSV, sep=";", index=True, index_label=INDEX)
     return stops
 
 
