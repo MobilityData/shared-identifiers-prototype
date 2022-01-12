@@ -25,6 +25,28 @@ To manually generate a test report for the project, enter the following commands
 $ (env) pytest --html=report.html
 ```
 
+### How to conflate?
+
+The script `conflate.py` allows you to conflate your stops to the MDB Stops following the first option steps, as described [here](https://github.com/MobilityData/mobility-database-interface/issues/338#issuecomment-999188292).
+
+To run the script, you will need the [Installation](#Installation) to be completed and your virtual environment to be activated.
+
+Enter the following command line to run the script:
+```
+$ python conflate.py -d $URL_OR_PATH_TO_YOUR_DATASET -D $YOUR_MDB_DATASET_ID -S $YOUR_MDB_SOURCE_ID -m $GET_STOPS_MODE -p $GET_STOPS_PARAMETERS -t $DISTANCE_THRESHOLD_IN_KM
+```
+
+The mode and parameter arguments are dependent. Make sure the parameters you provide are correct for the selected mode.
+
+| Mode | Description | Argument | Parameters format |
+|------|------|------|------|
+| Standard | Get all the MDB Stops | 'std' | '{}' |
+| By Boundary Box | Get the MDB Stops located in the boundary box | 'bounding_box' | '{"max_latitude": float, "min_latitude": float, "max_longitude": float, "min_longitude": float}' |
+| By Stop ID | Get the MDB Stops for which a referenced stop has the given Stop ID | 'stop_id' | '{"stop_id": string}' |
+| By Dataset ID | Get the MDB Stops for which a referenced stop has the given Dataset ID | 'dataset_id' | '{"dataset_id": string}' |
+| By Source ID | Get the MDB Stops for which a referenced stop has the given Source ID | 'source_id' | '{"source_id": string}' |
+
+
 ### Operations
 
 The package `tools` includes the operations for the prototype first option under `operations.py`, as described [here](https://github.com/MobilityData/mobility-database-interface/issues/338#issuecomment-999188292).

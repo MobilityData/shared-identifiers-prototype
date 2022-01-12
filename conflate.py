@@ -101,7 +101,7 @@ if __name__ == "__main__":
         help="Get Stops mode.",
     )
     parser.add_argument(
-        "-P",
+        "-p",
         "--get-stops-parameters",
         action="store",
         default="{}",
