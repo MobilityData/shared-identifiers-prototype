@@ -41,7 +41,7 @@ The mode and parameter arguments are dependent. Make sure the parameters you pro
 | Mode | Description | Argument | Parameters format |
 |------|------|------|------|
 | Standard | Get all the MDB Stops | 'std' | '{}' |
-| By Boundary Box | Get the MDB Stops located in the boundary box | 'bounding_box' | '{"max_latitude": float, "min_latitude": float, "max_longitude": float, "min_longitude": float}' |
+| By Bounding Box | Get the MDB Stops located in the bounding box | 'bounding_box' | '{"max_latitude": float, "min_latitude": float, "max_longitude": float, "min_longitude": float}' |
 | By Stop ID | Get the MDB Stops for which a referenced stop has the given Stop ID | 'stop_id' | '{"stop_id": string}' |
 | By Dataset ID | Get the MDB Stops for which a referenced stop has the given Dataset ID | 'dataset_id' | '{"dataset_id": string}' |
 | By Source ID | Get the MDB Stops for which a referenced stop has the given Source ID | 'source_id' | '{"source_id": string}' |
