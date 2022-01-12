@@ -105,7 +105,7 @@ if __name__ == "__main__":
         # Define the error margin.
         epsilon = 0.05
 
-        # Maximum latitude delta. 1 latitude degree is in average.
+        # Maximum latitude delta. 1 latitude degree is 111 km in average.
         max_d_lat = threshold / 111.000 * (1 + epsilon)
 
         matches = []
