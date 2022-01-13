@@ -1,2 +1,2 @@
 id;name;description;latitude;longitude;referenced_stops
-mdb_stop_34_055394_N_118_233118_E;Patsaouras Transit Plaza;Patsaouras Transit Plaza;34.055394;-118.233118;[{'stop_id': '30000', 'dataset_id': 'Q22414', 'source_id': 'Q939'}]
+mdb_stop_34_055394_N_118_233118_E;Patsaouras Transit Plaza;Patsaouras Transit Plaza;34.055394;-118.233118;[{'stop_id': '30000', 'dataset_id': 'Q22414', 'source_id': 'Q939'}, {'stop_id': '432147', 'dataset_id': 'Q22415', 'source_id': 'Q19505'}]
