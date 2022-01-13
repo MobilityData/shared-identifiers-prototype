@@ -4,7 +4,6 @@ STOPS_CSV = "stops.csv"
 
 # CSV KEY CONSTANTS
 
-INDEX = "index"
 ID = "id"
 NAME = "name"
 DESCRIPTION = "description"

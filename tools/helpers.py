@@ -1,16 +1,15 @@
 from constants import (
     STOPS_CSV,
-    INDEX,
 )
 import pandas as pd
 
 
 def load_stops():
-    return pd.read_csv(STOPS_CSV, delimiter=";", index_col=INDEX)
+    return pd.read_csv(STOPS_CSV, delimiter=";")
 
 
 def save_stops(stops):
-    stops.to_csv(STOPS_CSV, sep=";", index=True, index_label=INDEX)
+    stops.to_csv(STOPS_CSV, sep=";", index=False)
     return stops
 
 

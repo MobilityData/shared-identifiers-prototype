@@ -15,7 +15,7 @@ class TestStopsOperations(TestCase):
     @patch("tools.operations.helpers")
     def test_get_stops(self, mock_helpers):
         mock_helpers.load_stops.return_value = pd.read_csv(
-            self.test_stops_csv, delimiter=";", index_col=self.test_index
+            self.test_stops_csv, delimiter=";"
         )
         under_test = get_stops()
         mock_helpers.load_stops.assert_called_once()
@@ -25,7 +25,7 @@ class TestStopsOperations(TestCase):
     @patch("tools.operations.helpers")
     def test_get_stops_by_bounding_box(self, mock_helpers):
         mock_helpers.load_stops.return_value = pd.read_csv(
-            self.test_stops_csv, delimiter=";", index_col=self.test_index
+            self.test_stops_csv, delimiter=";"
         )
 
         max_latitude = 35.000000
@@ -63,7 +63,7 @@ class TestStopsOperations(TestCase):
     @patch("tools.operations.helpers")
     def test_get_stops_by_source_id(self, mock_helpers):
         mock_helpers.load_stops.return_value = pd.read_csv(
-            self.test_stops_csv, delimiter=";", index_col=self.test_index
+            self.test_stops_csv, delimiter=";"
         )
 
         source_id = "source_1"
@@ -86,7 +86,7 @@ class TestStopsOperations(TestCase):
     @patch("tools.operations.helpers")
     def test_get_stops_by_dataset_id(self, mock_helpers):
         mock_helpers.load_stops.return_value = pd.read_csv(
-            self.test_stops_csv, delimiter=";", index_col=self.test_index
+            self.test_stops_csv, delimiter=";"
         )
 
         dataset_id = "dataset_1"
@@ -109,7 +109,7 @@ class TestStopsOperations(TestCase):
     @patch("tools.operations.helpers")
     def test_get_stops_by_stop_id(self, mock_helpers):
         mock_helpers.load_stops.return_value = pd.read_csv(
-            self.test_stops_csv, delimiter=";", index_col=self.test_index
+            self.test_stops_csv, delimiter=";"
         )
 
         stop_id = "stop_1"
@@ -132,7 +132,7 @@ class TestStopsOperations(TestCase):
     @patch("tools.operations.helpers")
     def test_add_stop(self, mock_helpers):
         mock_helpers.load_stops.return_value = pd.read_csv(
-            self.test_stops_csv, delimiter=";", index_col=self.test_index
+            self.test_stops_csv, delimiter=";"
         )
 
         test_name = "test_name"
@@ -190,7 +190,7 @@ class TestStopsOperations(TestCase):
     @patch("tools.operations.helpers")
     def test_attach_ref_stop(self, mock_helpers):
         mock_helpers.load_stops.return_value = pd.read_csv(
-            self.test_stops_csv, delimiter=";", index_col=self.test_index
+            self.test_stops_csv, delimiter=";"
         )
 
         test_mdb_stop_id = "nonexistent_mdb_stop_id"
@@ -242,7 +242,7 @@ class TestStopsOperations(TestCase):
     @patch("tools.operations.helpers")
     def test_detach_ref_stop(self, mock_helpers):
         mock_helpers.load_stops.return_value = pd.read_csv(
-            self.test_stops_csv, delimiter=";", index_col=self.test_index
+            self.test_stops_csv, delimiter=";"
         )
 
         test_mdb_stop_id = "nonexistent_mdb_stop_id"
