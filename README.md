@@ -34,7 +34,6 @@ The file `stops.csv` contains all our data representing the MDB Stops. The file 
 
 | Column | Type | Description |
 |--------|------|-------------|
-| `index` | integer | Index of the MDB Stop in the CSV file. |
 | `id` | string | ID of the MDB Stop. Generated when a new MDB Stop is added using the latitude and longitude of the stop. |
 | `name` | string  | Name of the MDB Stop. It usually corresponds to the value `stop_name` in a GTFS `stops.txt` file. |
 | `description` | string | Description of the MDB Stop. It should describe the relationship that the MDB Stop represents, eg. The MBD Stop is a transfer stop in Santa Monica.|
